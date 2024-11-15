@@ -1,5 +1,12 @@
 import sys
-sys.path.append(r"C:\Program Files\Vicon\ShogunPost1.12\SDK\Win64")
+import yaml
+
+# Load the configuration file
+params = None
+with open('scripts/config.yaml', 'r') as file:
+    params = yaml.safe_load(file)
+
+sys.path.append(params['shogun_post_sdk_path'])
 
 try:
     import ViconShogunPostSDK

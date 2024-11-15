@@ -5,3 +5,7 @@ default_csv_endpoint: "http://default.endpoint2.com"
 # Shogun post address and port
 shogun_post_address: "localhost"
 shogun_post_port: 805
+
+# Shogun post paths
+shogun_post_path: "C:/Program Files/Vicon/ShogunPost1.12/ShogunPost.exe"
+shogun_post_sdk_path: "C:/Program Files/Vicon/ShogunPost1.12/SDK/Win64"

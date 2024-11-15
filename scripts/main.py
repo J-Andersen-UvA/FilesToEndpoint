@@ -18,10 +18,8 @@ with open('scripts/config.yaml', 'r') as file:
 
 
 
-# Path to the Shogun Post executable
-shogun_path = r"C:\Program Files\Vicon\ShogunPost1.12\ShogunPost.exe"
-
-# Arguments for launching Shogun Post
+# Path to the Shogun Post executable and arguments
+shogun_path = params['shogun_post_path']
 args = [shogun_path, "--SkipSplash"]
 
 # Launch Shogun Post and wait for it to open fully
