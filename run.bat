@@ -1,0 +1,1 @@
+start cmd /k "title auto mcp to fbx & python scripts/main.py"
