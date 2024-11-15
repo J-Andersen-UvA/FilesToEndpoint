@@ -1,0 +1,7 @@
+# In and output paths
+default_fbx_endpoint: "http://default.endpoint.com"
+default_csv_endpoint: "http://default.endpoint2.com"
+
+# Shogun post address and port
+shogun_post_address: "localhost"
+shogun_post_port: 805

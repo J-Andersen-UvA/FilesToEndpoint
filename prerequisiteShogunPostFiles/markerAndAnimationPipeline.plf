@@ -1,0 +1,27 @@
+<?xml version="1.0" standalone="yes" ?>
+<Pipeline VERSION="2">
+    <Operation NAME="RemoveWand" USERNAME="RemoveWand" ENABLED="1" />
+    <Operation NAME="SelectAllMarkers" USERNAME="SelectAllMarkers" ENABLED="1" />
+    <Operation NAME="ExportCSV_SelectedMarkers" USERNAME="ExportCSV_SelectedMarkers" ENABLED="1">
+        <Parameter NAME="FileNameAppendage" TYPE="String">
+            <Value VALUE_STRING="_MarkerData" />
+        </Parameter>
+        <Parameter NAME="SelectedCharacterOnly" TYPE="String">
+            <Value VALUE_STRING="false" />
+        </Parameter>
+        <Parameter NAME="Path" TYPE="String">
+            <Value VALUE_STRING="C:/Users/VICON/Desktop/tmp/test/Out/CSV/" />
+        </Parameter>
+    </Operation>
+    <Operation NAME="exportFBX" USERNAME="exportFBX" ENABLED="1">
+        <Parameter NAME="frameRateType" TYPE="String">
+            <Value VALUE_STRING="custom" />
+        </Parameter>
+        <Parameter NAME="frameRate" TYPE="Integer">
+            <Value VALUE_STRING="100" />
+        </Parameter>
+        <Parameter NAME="Path" TYPE="String">
+            <Value VALUE_STRING="C:/Users/VICON/Desktop/tmp/test/Out/FBX/" />
+        </Parameter>
+    </Operation>
+</Pipeline>

@@ -1,0 +1,15 @@
+string $frameRateType;
+input $frameRateType "custom" -description "Enter the frame rate type, Custom if no TimeCode";
+
+int $frameRate;
+input $frameRate 100 -description "Enter framerate, 100 max for fbx custom frameratetype";
+setFrameRate $frameRateType $frameRate;
+
+string $fileNameExtension = `GetPathToExportTo` + ".mcp";
+string $fileName = `getFileTitle $fileNameExtension`;
+string $Path;
+input $Path "" -description "You may enter a file export path.";
+
+string $savePath;
+$savePath = $Path + $fileName + ".fbx";
+saveFile -s $savePath;

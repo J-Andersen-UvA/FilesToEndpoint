@@ -1,0 +1,11 @@
+selectByType Character;
+string $Subjects[] = `getModules -selected -nameOnly`;
+int $i;
+for($i = 0; $i < `getCount $Subjects`; $i += 1)
+{
+	if ($Subjects[$i] == "Wand")
+	{
+		selectChildren $Subjects[$i];
+		delete;
+	}
+}

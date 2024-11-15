@@ -1,0 +1,171 @@
+//User Input Variables
+string $CSV;
+//input $CSV "" -file "Comma Seperated Value (*.csv)|*.csv" -description "You may manually enter a Filename.  If Filename is left blank, Blade will choose the filename automatically based on the scene name.";
+
+string $FileNameAppendage;
+input $FileNameAppendage "" -description "You may enter test to be appended to the file name. If left blank, no appendage will be added";
+
+string $Modules;
+//input $Modules "Bones" -discrete "Bones" "Markers" -description "Export Bone or Marker data. If Markers are selected, the \"Local\" input will be ignored.";
+
+string $SelectedCharacterOnly;
+input $SelectedCharacterOnly "false" -discrete "true" "false" -description "If set to false, Blade will export all subjects in the scene.";
+
+string $Local;
+//input $Local "false" -discrete "true" "false" -description "If set to false, Blade will export the global translation and rotation data.";
+
+string $Type;
+//input $Type "All Time" -discrete "All Time" "Play Range";
+
+// Get a path to export to. It'll either be based on the last file loaded
+// or a default path. 
+string $fileNameExtension = `GetPathToExportTo` + ".mcp";
+string $fileName = `getFileTitle $fileNameExtension`;
+string $Path;  //= "C:/Users/Public/Documents/Vicon/ShogunLive1.x/Captures/BodyAndMarkers/";
+input $Path "" -description "You may enter a file export path. The last loaded file path will be used";
+
+//Script Variables
+string $Subjects[], $Segments[];
+string $s;//temp string
+int $i, $n;//temp counter values
+
+float $x, $y, $z;
+vector $pos;// = `getPosition "nodeName" -ws`;
+vector $rot;// = `getRotation "nodeName" -ws`;
+
+float $Completion = 0;
+float $TotalDone = -1;
+float $Total = 0;
+
+int $Start;
+int $End;
+int $CurTime;
+boolean $Error = false;
+
+string $UserCurrentSelection[] = `getModules -selected -type Marker`;
+int $UserCurrentTime = `getTime`;
+
+
+
+	$Start = `getPlayStart`;
+	$End = `getPlayEnd`;
+
+
+string $fileExtension = ".csv";
+
+
+if( $FileNameAppendage != "")
+{
+	$fileName += $FileNameAppendage;
+}
+
+$fileName += $fileExtension;
+
+$CSV = $Path + $fileName;
+
+//******* Open CSV for writing *******//
+int $File = `fileOpen $CSV "w"`;
+
+if($SelectedCharacterOnly == "true")
+{
+	$Subjects = `getModules -selected -nameOnly`;
+	for($i = 0; $i < `getCount $Subjects`; $i += 1)
+	{
+		if(`getModuleType $Subjects[$i]` != Character)
+		{
+			$s = "Module: " + $Subjects[$i] + " is not a character node!! Ending CSV Export";
+			print $s;
+			return;
+		}
+	}
+}
+else
+{
+	selectByType Character;
+	$Subjects = `getModules -selected -nameOnly`;
+}
+
+//******* Detemine how much work must be done *******//
+$Total = $End - $Start; 
+$Total = `getCount $Subjects` * $Total;
+
+//Write data for each subject
+for($i = 0; $i < `getCount $Subjects`; $i += 1)
+{
+	select $Subjects[$i];
+	setPriority;
+	select;
+
+	$s = $Subjects[$i] + "\n";
+	$s += "Frame,";
+
+	//selectChildren $Subjects[$i] -recursive;
+	select $UserCurrentSelection;
+	
+	$Segments = `getModules -selected -nameOnly -type Marker`;
+	
+	//Add each subject bone to the csv section header
+	for($n = 0; $n < `getCount $Segments`; $n += 1)
+	{
+		
+			$s = $s + $Segments[$n] + "<T-X>,";
+			$s = $s + $Segments[$n] + "<T-Y>,";
+			$s = $s + $Segments[$n] + "<T-Z>,";
+	
+	}
+	$s = $s + "\n";
+	writeString $File $s;
+
+	//Write Translation and rotation values for each frame for each bone
+	for($CurTime = $Start; $CurTime <= $End; $CurTime += 1)
+	{
+		setTime $CurTime;
+		$s = string($CurTime) + ",";
+		for($n = 0; $n < `getCount $Segments`; $n += 1)
+		{
+			
+				select $Segments[$n] -priorityOnly;
+							
+			
+				if(`hasKey $Segments[$n] "TranslationX"`)
+				{
+					$x = `getProperty $Segments[$n] "TranslationX"`;
+					$y = `getProperty $Segments[$n] "TranslationY"`;
+					$z = `getProperty $Segments[$n] "TranslationZ"`;
+					$s = $s + string($x) + ",";
+					$s = $s + string($y) + ",";
+					$s = $s + string($z) + ",";
+				}
+				else
+				{
+					$s = $s + ",,,";
+				}
+				
+				
+			//}
+		}
+		$s = $s + "\n";
+		writeString $File $s;
+
+		//Calculate and display export progress
+		$TotalDone += 1;
+
+		if(int($TotalDone) % 200 == 0)
+		{
+			$Completion = ($TotalDone / $Total) * 100;
+			$s = "CSV Export Progress: " + string(int($Completion)) + "%";
+			print $s;
+		}
+	}
+
+	$s = "\n";
+	writeString $File $s;
+}
+$s = "Finished exporting: " + $CSV;
+print $s;
+fileClose $File;
+
+//Reset User's current time
+// setTime $UserCurrentTime;
+
+// SetPal25;
