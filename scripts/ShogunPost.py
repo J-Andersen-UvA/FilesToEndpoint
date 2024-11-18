@@ -34,7 +34,57 @@ class ViconShogunPost(object):
 
         if not self._Client.IsConnected():
             raise ConnectionError("Unable to connect to ShogunPost application.")
-    
+
+    def processRecording(self, input_file_path, output_fbx_folder, output_csv_folder):
+        """
+        Processes a recording file in Shogun Post, exporting both CSV and FBX files.
+        
+        Args:
+            input_file_path (str): The path to the input .mcp file.
+            output_fbx_folder (str): The folder where the FBX file should be exported.
+            output_csv_folder (str): The folder where the CSV file should be exported.
+        """
+        # Construct the HSL script
+        hsl_script = f"""
+        // Load the recording file
+        loadFile "{input_file_path}";
+        
+        // Remove Wand markers (optional based on your use case)
+        RemoveWand;
+        
+        // Select all markers
+        SelectAllMarkers;
+        
+        // Export selected markers to CSV
+        string $FileNameAppendage = "_MarkerData";
+        string $SelectedCharacterOnly = "false";
+        string $CSVPath = "{output_csv_folder}/";
+        ExportCSV_SelectedMarkers $FileNameAppendage $SelectedCharacterOnly $CSVPath;
+        
+        // Select the fbx character
+        selectByType SolvingBone;
+        select "Solving";
+        SelectParent_Add_All;
+        SelectChildren_Add_All;
+
+        // Export to FBX
+        string $frameRateType = "custom";
+        int $frameRate = 100;
+        setFrameRate $frameRateType $frameRate;
+        string $Path = "{output_fbx_folder}/";
+        string $fileNameExtension = `GetPathToExportTo` + ".mcp";
+        string $fileName = `getFileTitle $fileNameExtension`;
+        string $savePath;
+        $savePath = $Path + $fileName + ".fbx";
+        saveFile $savePath -s;
+
+        // Close the file
+        newFile -promptToSave;
+        """
+
+        # Execute the HSL script
+        return self._Client.HSL(hsl_script)
+
     # def setPAL100(self):
     #     hsl = """setFrameRate "pal" 100.000000;"""
     #     return self._Client.HSL(hsl)

@@ -1,11 +1,12 @@
 # In and output paths
-default_fbx_endpoint: "http://default.endpoint.com"
-default_csv_endpoint: "http://default.endpoint2.com"
+websocketServer: "wss://leffe.science.uva.nl:8043/unrealServer/"
+default_fbx_endpoint: "https://leffe.science.uva.nl:8043/glexServer/"
+default_csv_endpoint: "https://leffe.science.uva.nl:8043/glexServer/"
 
 # Shogun post address and port
 shogun_post_address: "localhost"
 shogun_post_port: 805
 
-# Shogun post paths
-shogun_post_path: "C:/Program Files/Vicon/ShogunPost1.12/ShogunPost.exe"
-shogun_post_sdk_path: "C:/Program Files/Vicon/ShogunPost1.12/SDK/Win64"
+# # Shogun post paths
+# shogun_post_path: "C:/Program Files/Vicon/ShogunPost1.12/ShogunPost.exe"
+# shogun_post_sdk_path: "C:/Program Files/Vicon/ShogunPost1.12/SDK/Win64"

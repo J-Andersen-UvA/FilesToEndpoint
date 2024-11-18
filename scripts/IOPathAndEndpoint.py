@@ -45,24 +45,42 @@ class FolderAndEndpointPrompt(UserPrompt):
     """
     def __init__(self):
         super().__init__()
-        self.input_folder = ""
-        self.output_fbx_folder = ""
-        self.output_csv_folder = ""
-        self.web_endpoint_fbx = ""
-        self.web_endpoint_csv = ""
+        # self.input_folder = "C:/Users/VICON/Desktop/tmp/test/In"
+        self.output_fbx_folder = "C:/Users/VICON/Desktop/tmp/test/Out/FBX"
+        self.output_csv_folder = "C:/Users/VICON/Desktop/tmp/test/Out/CSV"
+        self.web_endpoint_fbx = "https://leffe.science.uva.nl:8043/glexServer/"
+        self.web_endpoint_csv = "https://leffe.science.uva.nl:8043/glexServer/"
 
     def prompt_folders(self):
-        self.input_folder = self.prompt_directory("Select Input Folder")
-        if not self.input_folder:
-            raise ValueError("Input folder is required.")
+        # input_folder = self.prompt_directory("Select Input Folder")
+        # if input_folder is not None and input_folder != "":
+        #     self.input_folder = input_folder  
+        output_fbx_folder = self.prompt_directory("Select Output Folder for FBX")
+        if output_fbx_folder is not None and output_fbx_folder != "":
+            self.output_fbx_folder = output_fbx_folder
+        output_csv_folder = self.prompt_directory("Select Output Folder for CSV")
+        if output_csv_folder is not None and output_csv_folder != "":
+            self.output_csv_folder = output_csv_folder
 
-        self.output_fbx_folder = self.prompt_directory("Select Output Folder for FBX")
-        if not self.output_fbx_folder:
-            raise ValueError("Output FBX folder is required.")
+        # self.input_folder = self.ensure_path_validity(self.input_folder)
+        self.output_fbx_folder = self.ensure_path_validity(self.output_fbx_folder)
+        self.output_csv_folder = self.ensure_path_validity(self.output_csv_folder)
 
-        self.output_csv_folder = self.prompt_directory("Select Output Folder for CSV")
-        if not self.output_csv_folder:
-            raise ValueError("Output CSV folder is required.")
+        # print(f"Input Folder: {self.input_folder}")
+        print(f"Output FBX Folder: {self.output_fbx_folder}")
+        print(f"Output CSV Folder: {self.output_csv_folder}")
+
+    def ensure_path_validity(self, path):
+        # Normalize path: Replace backslashes with forward slashes
+        path = path.replace("\\", "/")
+
+        # Ensure the input folder ends with a slash
+        if not path.endswith(os.path.sep):
+            path += "/"
+
+        if not os.path.exists(path):
+            raise ValueError(f"Invalid path: {path}")
+        return path
 
     def confirm_web_endpoints(self):
         current_endpoint_fbx = self.prompt_string("Web Endpoint for FBX", f"Current web endpoint for FBX is {self.web_endpoint_fbx}. Enter new endpoint or leave blank to keep current:")
