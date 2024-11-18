@@ -16,15 +16,15 @@ class UserPrompt:
     def __init__(self):
         pass
 
-    def prompt_directory(self, title):
+    def prompt_directory(self, title, initialdir=""):
         root = tk.Tk()
         root.withdraw()  # Hide the root window
-        return filedialog.askdirectory(title=title)
+        return filedialog.askdirectory(title=title, initialdir=initialdir)
 
-    def prompt_string(self, title, prompt):
+    def prompt_string(self, title, prompt, initialvalue=""):
         root = tk.Tk()
         root.withdraw()  # Hide the root window
-        return simpledialog.askstring(title, prompt)
+        return simpledialog.askstring(title, prompt, initialvalue=initialvalue)
 
 
 class FolderAndEndpointPrompt(UserPrompt):
@@ -52,21 +52,18 @@ class FolderAndEndpointPrompt(UserPrompt):
         self.web_endpoint_csv = "https://leffe.science.uva.nl:8043/glexServer/"
 
     def prompt_folders(self):
-        # input_folder = self.prompt_directory("Select Input Folder")
-        # if input_folder is not None and input_folder != "":
-        #     self.input_folder = input_folder  
-        output_fbx_folder = self.prompt_directory("Select Output Folder for FBX")
-        if output_fbx_folder is not None and output_fbx_folder != "":
+        output_fbx_folder = self.prompt_directory("Select Output Folder for FBX", initialdir=self.output_fbx_folder)
+        if output_fbx_folder:
             self.output_fbx_folder = output_fbx_folder
-        output_csv_folder = self.prompt_directory("Select Output Folder for CSV")
-        if output_csv_folder is not None and output_csv_folder != "":
+
+        output_csv_folder = self.prompt_directory("Select Output Folder for CSV", initialdir=self.output_csv_folder)
+        if output_csv_folder:
             self.output_csv_folder = output_csv_folder
 
-        # self.input_folder = self.ensure_path_validity(self.input_folder)
+        # Ensure path validity
         self.output_fbx_folder = self.ensure_path_validity(self.output_fbx_folder)
         self.output_csv_folder = self.ensure_path_validity(self.output_csv_folder)
 
-        # print(f"Input Folder: {self.input_folder}")
         print(f"Output FBX Folder: {self.output_fbx_folder}")
         print(f"Output CSV Folder: {self.output_csv_folder}")
 
@@ -83,11 +80,11 @@ class FolderAndEndpointPrompt(UserPrompt):
         return path
 
     def confirm_web_endpoints(self):
-        current_endpoint_fbx = self.prompt_string("Web Endpoint for FBX", f"Current web endpoint for FBX is {self.web_endpoint_fbx}. Enter new endpoint or leave blank to keep current:")
+        current_endpoint_fbx = self.prompt_string("Web Endpoint for FBX", f"Current web endpoint for FBX is {self.web_endpoint_fbx}. Enter endpoint:", initialvalue=self.web_endpoint_fbx)
         if current_endpoint_fbx:
             self.web_endpoint_fbx = current_endpoint_fbx
 
-        current_endpoint_csv = self.prompt_string("Web Endpoint for CSV", f"Current web endpoint for CSV is {self.web_endpoint_csv}. Enter new endpoint or leave blank to keep current:")
+        current_endpoint_csv = self.prompt_string("Web Endpoint for CSV", f"Current web endpoint for CSV is {self.web_endpoint_csv}. Enter endpoint:", initialvalue=self.web_endpoint_csv)
         if current_endpoint_csv:
             self.web_endpoint_csv = current_endpoint_csv
 
