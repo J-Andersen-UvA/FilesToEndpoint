@@ -1,21 +1,21 @@
-# Automated Motion Capture Post-Processing with Shogun Post
+# Automated Motion Capture File Uploader with Optional Shogun Post Batch Integration
 
 ## Overview
 
-This project automates the post-processing of motion capture data recorded using **Vicon Shogun Live**. After recording sessions, the raw `.mcp` files are processed using **Shogun Post**. The script performs the following tasks:
+This project streamlines the post-processing of motion capture data, focusing on uploading `.fbx` and `.csv` files to specified web endpoints. Although the core functionality is now focused on file uploads, the repository still retains the necessary setup and scripts for users who want to integrate it with Vicon Shogun Post for automated batch processing.
 
-1. **Converts `.mcp` files to `.fbx` format**.
-2. **Extracts marker data and saves it as a `.csv` file**.
-3. **Uploads the generated `.fbx` and `.csv` files to a specified web endpoint**.
+The script performs the following tasks:
 
-This setup allows you to run the script after a session and leave it unattended, simplifying the workflow and saving time.
+1. Uploads `.fbx` files from the selected folder to the specified FBX endpoint.
+2. Uploads `.csv` files from the selected folder to the specified CSV endpoint.
+3. Optional: Users can still utilize the provided pipeline for batch processing .mcp files in Shogun Post before uploading.
 
 ## Prerequisites
 
-1. **Vicon Shogun Live** and **Vicon Shogun Post** installed.
-2. Python environment with the `requests` library installed and `Vicon API`
+1. (Optional) **Vicon Shogun Live** and **Vicon Shogun Post** installed.
+2. Python environment with the `requests` library installed
 3. A configured web endpoint URL to receive the uploaded files.
 
 ## Usage
-Execute the Python script after your session, go through the prompts selecting the correct folders.
-The Python script then scans the input folder directory for .mcp files, launches Shogun Post and runs with a pipeline script in order to convert the .mcp files. After conversion the files are uploaded to the specified web endpoint (set in the config.yaml) using HTTP POST requests.
+Execute the Python script after `.mcp` conversion with Shogun Post batching panel (keeping in mind that we provide a pipeline), go through the prompts selecting the correct folders.
+The Python script then scans the input folder directory for `.fbx` and `.csv` files. These are uploaded to the specified web endpoint (set in the config.yaml) using HTTP POST requests.

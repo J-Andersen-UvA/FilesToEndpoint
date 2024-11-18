@@ -1,1 +1,1 @@
-start cmd /k "title auto mcp to fbx & python scripts/main.py"
+start cmd /k "title send files to endpoint & python scripts/main.py"
